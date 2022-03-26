@@ -1,7 +1,8 @@
+require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const port = 4000;
+const port = process.env.PORT;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -11,7 +12,7 @@ const playlist = ["track 1", "track 2", "track 3", "track 4", "track 5", "track 
 // Root
 app.get('/', (req, res) => {
   let num = Math.random();
-  let trackIndex = Math.round(num * playlist.length)
+  let trackIndex = Math.round((num * playlist.length) - 1)
   console.log(playlist[trackIndex])
   res.send("num");
 });
