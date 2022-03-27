@@ -31,7 +31,16 @@ app.get('/', (req, res) => {
 });
 // Add Track
 app.post('/addtrack', (req, res) => {
+  let trackUrl = req.body.trackUrl
   console.log("request posted to /addtrack")
+  console.log(req.body)
+  // Handle youtube
+  if (trackUrl.includes("youtube") == true) {
+
+    console.log("youtube")
+  } else if (trackUrl.includes("soundcloud") == true) {
+    console.log("soundcloud")
+  }
   console.log(req.body)
 
 
