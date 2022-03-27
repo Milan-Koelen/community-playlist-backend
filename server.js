@@ -31,15 +31,15 @@ app.get('/', (req, res) => {
 });
 // Add Track
 app.post('/addtrack', (req, res) => {
-  let trackUrl = req.body.trackUrl
+  let trackUrl = req.body.trackUrl.toLowerCase()
   console.log("request posted to /addtrack")
   console.log(req.body)
   // Handle youtube
   if (trackUrl.includes("youtube") == true) {
 
-    console.log("youtube")
+    console.log("YouTube Track Added")
   } else if (trackUrl.includes("soundcloud") == true) {
-    console.log("soundcloud")
+    console.log("SoundCloud Track Added")
   }
   console.log(req.body)
 
