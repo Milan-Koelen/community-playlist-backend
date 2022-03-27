@@ -4,6 +4,18 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT;
 
+
+// Add Access Control Allow Origin headers
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const playlist = ["track 1", "track 2", "track 3", "track 4", "track 5", "track 6", "track 7", "track 8", "track 9", "track 10",
@@ -17,7 +29,10 @@ app.get('/', (req, res) => {
   res.send("num");
 });
 // Add Track
-app.get('/addtrack', (req, res) => {
+app.post('/addtrack', (req, res) => {
+  console.log("request posted to /addtrack")
+  console.log(req.body)
+
 
 
   res.send('This is the second endpoint');
