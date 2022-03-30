@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "body-parser": "^1.19.2",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "ffmpeg": "^0.0.4",
     "pug": "^3.0.2",
