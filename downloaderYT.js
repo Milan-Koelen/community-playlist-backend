@@ -1,6 +1,6 @@
 var YoutubeMp3Downloader = require("youtube-mp3-downloader");
 
-var DownloaderYT = function () {
+var Downloader = function () {
 
   var self = this;
 
@@ -11,8 +11,9 @@ var DownloaderYT = function () {
     "youtubeVideoQuality": "highestaudio",  // Desired video quality (default: highestaudio)
     "queueParallelism": 5,                  // Download parallelism (default: 1)
     "progressTimeout": 2000                 // Interval in ms for the progress reports (default: 1000)
-        "outputOptions": ["-af", "silenceremove=1:0:-50dB"] // Additional output options passend to ffmpeg
+    // "outputOptions": ["-af", "silenceremove=1:0:-50dB"] // Additional output options passend to ffmpeg
   });
+
 
   self.callbacks = {};
 
@@ -51,4 +52,4 @@ Downloader.prototype.getMP3 = function (track, callback) {
 
 };
 
-module.exports = DownloaderYT;
+module.exports = Downloader;

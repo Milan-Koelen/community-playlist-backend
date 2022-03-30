@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 
 
 // Add Access Control Allow Origin headers
@@ -22,6 +22,56 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const playlist = ["track 1", "track 2", "track 3", "track 4", "track 5", "track 6", "track 7", "track 8", "track 9", "track 10",
   "track 11", "track 12", "track 13", "track 14", "track 15", "track 16", "track 17", "track 18", "track 19", "track 20"]
 
+// Handle YouToube
+const downloadYT = (req) => {
+
+
+  var Downloader = require("./downloaderYT");
+  var dl = new Downloader();
+  var i = 0;
+
+  // Hardcoded video ID, still nog working correctly
+
+  // dl.download(req.body.videoId, "./public/music/", function (err, filename) {
+  //   if (err)
+  //     throw err;
+  //   else { console.log("Downloaded: " + filename); }
+  // });
+
+  dl.getMP3({ videoId: "Vhd6Kc4TZls", name: "Cold Funk - Funkorama.mp3" }, function (err, res) {
+    i++;
+    if (err)
+      throw err;
+    else {
+      console.log("Song " + i + " was downloaded: " + res.file);
+    }
+  });
+
+  // const Downloader = require("./downloaderYT");
+  // const dl = new Downloader();
+  // const i = 0;
+
+  let id = req.body.trackUrl.replace("https://www.youtube.com/watch?v=", "")
+  console.log("Video ID: " + id)
+
+
+  dl.getMP3({ videoId: id, name: id }, function (err, res) {
+    i++;
+    if (err)
+      throw err;
+    else {
+      console.log("Song " + i + " was downloaded: " + res.file);
+    }
+  });
+};
+
+// Handle SoundCloud
+const downloadSC = (req) => {
+  console.log(req.body)
+  console.log("SoundCloud Track Added")
+
+}
+
 // Root
 app.get('/', (req, res) => {
   let num = Math.random();
@@ -33,20 +83,16 @@ app.get('/', (req, res) => {
 app.post('/addtrack', (req, res) => {
   let trackUrl = req.body.trackUrl.toLowerCase()
   console.log("request posted to /addtrack")
-  console.log(req.body)
-  // Handle youtube
   if (trackUrl.includes("youtube") == true) {
-
-    console.log("YouTube Track Added")
+    // Handle YouTube
+    downloadYT(req)
   } else if (trackUrl.includes("soundcloud") == true) {
-    console.log("SoundCloud Track Added")
+    // Handle SoundCloud
+    downloadSC(req)
   }
-  console.log(req.body)
-
-
-  res.send(req.body);
+  res.send("received: " + req.body.trackUrl);
 });
 
 app.listen(port, () => {
   console.log(`Success! Your application is running on port ${port}.`);
-});
+})
