@@ -63,9 +63,17 @@ const downloadYT = (req) => {
 
 // Handle SoundCloud
 const downloadSC = (req) => {
-  require('./downloaderSC')
-  console.log("SoundCloud Track Submited")
-
+  const scdl = require("soundcloud-downloader").default;
+  const fs = require('fs');
+  // const url = "https://soundcloud.com/user-115084905/zella-day-east-of-eden-crome-remix?in=lukasm1/sets/chill-mix-high-on-chill"
+  scdl.download(req.body.trackUrl)
+    .then(stream => stream.pipe(fs.createWriteStream('data/mp3/' + Math.random() + ".mp3").on("open", function () {
+      console.log("Downloading")
+    }))
+      .on('finish', function () {
+        console.log("Download finished")
+      }))
+    .catch(err => console.log(err))
 }
 
 // Root
@@ -84,12 +92,15 @@ app.post('/addtrack', (req, res) => {
     // Handle YouTube
   if (req.body.trackUrl.toLowerCase().includes("youtube") === true) {
     downloadYT(req)
+    const platform = "YouTube"
+  res.send("received " + platform + " Track: " + req.body.trackUrl);
 
-    // Handle SoundCloud
+  // Handle SoundCloud
   } else if (req.body.trackUrl.toLowerCase().includes("soundcloud") === true) {
-    downloadSC(req.body)
+    downloadSC(req)
+    const platform = "SoundCloud"
+  res.send("received " + platform + " Track: " + req.body.trackUrl);
   }
-  res.send("received: " + req.body.trackUrl);
 });
 
 app.listen(port, () => {
