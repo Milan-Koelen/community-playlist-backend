@@ -43,13 +43,8 @@ const downloadYT = (req) => {
     }
   });
 
-  // const Downloader = require("./downloaderYT");
-  // const dl = new Downloader();
-  // const i = 0;
-
   let id = req.body.trackUrl.replace("https://www.youtube.com/watch?v=", "")
   console.log("Video ID: " + id)
-
 
   dl.getMP3({ videoId: id, name: id }, function (err, res) {
     i++;
@@ -65,7 +60,6 @@ const downloadYT = (req) => {
 const downloadSC = (req) => {
   const scdl = require("soundcloud-downloader").default;
   const fs = require('fs');
-  // const url = "https://soundcloud.com/user-115084905/zella-day-east-of-eden-crome-remix?in=lukasm1/sets/chill-mix-high-on-chill"
   scdl.download(req.body.trackUrl)
     .then(stream => stream.pipe(fs.createWriteStream('data/mp3/' + Math.random() + ".mp3").on("open", function () {
       console.log("Downloading")
@@ -75,7 +69,6 @@ const downloadSC = (req) => {
       }))
     .catch(err => console.log(err))
 }
-
 // Root
 app.get('/', (req, res) => {
   let num = Math.random();
@@ -102,7 +95,6 @@ app.post('/addtrack', (req, res) => {
   res.send("received " + platform + " Track: " + req.body.trackUrl);
   }
 });
-
 app.listen(port, () => {
   console.log(`Success! Your application is running on port ${port}.`);
 })
