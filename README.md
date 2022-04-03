@@ -106,3 +106,8 @@ Distributed under the MIT License. See [LICENSE](https://github.com/Milan-Koelen
 <!-- ## Acknowledgements
 
 - [ShaanCoding](https://github.com/ShaanCoding/)
+-->
+
+## Disclaimer
+
+I do not support piracy and this package is not designed for circumventing the technological measures employed by SoundCloud, YouTube or any other preventing unauthorized access to copyrighted works. This package is only for downloading audio you have access to.
