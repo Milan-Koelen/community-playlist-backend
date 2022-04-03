@@ -64,17 +64,7 @@ const downloadYT = (req) => {
 // Handle SoundCloud
 const downloadSC = (req) => {
   require('./downloaderSC')
-  // console.log(req.body)
   console.log("SoundCloud Track Submited")
-  const scdl = require("soundcloud-downloader").default;
-  const fs = require('fs')
-
-  scdl.download(req.body)
-  .then(stream => stream.pipe(fs.createWriteStream('audio.mp3').on("finish" ,function(){
-    stream.close();
-    console.log("file downloaded")
-  })))
-  .catch(err => console.log(err))
 
 }
 
