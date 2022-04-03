@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 4000;
 
-
 // Add Access Control Allow Origin headers
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -17,15 +16,12 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.urlencoded({ extended: false }));
 
 const playlist = ["track 1", "track 2", "track 3", "track 4", "track 5", "track 6", "track 7", "track 8", "track 9", "track 10",
   "track 11", "track 12", "track 13", "track 14", "track 15", "track 16", "track 17", "track 18", "track 19", "track 20"]
 
 // Handle YouToube
 const downloadYT = (req) => {
-
-
   var Downloader = require("./downloaderYT");
   var dl = new Downloader();
   var i = 0;
@@ -67,8 +63,18 @@ const downloadYT = (req) => {
 
 // Handle SoundCloud
 const downloadSC = (req) => {
-  console.log(req.body)
-  console.log("SoundCloud Track Added")
+  require('./downloaderSC')
+  // console.log(req.body)
+  console.log("SoundCloud Track Submited")
+  const scdl = require("soundcloud-downloader").default;
+  const fs = require('fs')
+
+  scdl.download(req.body)
+  .then(stream => stream.pipe(fs.createWriteStream('audio.mp3').on("finish" ,function(){
+    stream.close();
+    console.log("file downloaded")
+  })))
+  .catch(err => console.log(err))
 
 }
 
@@ -83,12 +89,15 @@ app.get('/', (req, res) => {
 app.post('/addtrack', (req, res) => {
   let trackUrl = req.body.trackUrl.toLowerCase()
   console.log("request posted to /addtrack")
-  if (trackUrl.includes("youtube") == true) {
+  console.log(trackUrl)
+
     // Handle YouTube
+  if (req.body.trackUrl.toLowerCase().includes("youtube") === true) {
     downloadYT(req)
-  } else if (trackUrl.includes("soundcloud") == true) {
+
     // Handle SoundCloud
-    downloadSC(req)
+  } else if (req.body.trackUrl.toLowerCase().includes("soundcloud") === true) {
+    downloadSC(req.body)
   }
   res.send("received: " + req.body.trackUrl);
 });
