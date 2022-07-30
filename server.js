@@ -82,10 +82,14 @@ const downloadSC = (req) => {
 app.get('/', (req, res) => {
 
   let num = Math.random();
-  let trackIndex = Math.round((num * playlist.length) - 1)
-  console.log(playlist[trackIndex])
+  let trackIndex = Math.round((num * (playlist.length - 1)))
+  track = playlist[trackIndex]
+  console.log(track)
+  let file = dir + "/" + track
+  const rstream = fs.createReadStream(dir + "/" + track);
+  rstream.pipe(res);
 
-  res.send("num");
+  // res.send(track);
 });
 // Add Track
 app.post('/addtrack', (req, res) => {
