@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require("fs")
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -17,9 +18,15 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const playlist = ["track 1", "track 2", "track 3", "track 4", "track 5", "track 6", "track 7", "track 8", "track 9", "track 10",
-  "track 11", "track 12", "track 13", "track 14", "track 15", "track 16", "track 17", "track 18", "track 19", "track 20"]
-
+dir = "./data/mp3"
+const playlist = fs.readdir(dir,
+  (err, files) => {
+    if (err) {
+      throw err;
+    }
+    console.log(files)
+  }
+)
 // Handle YouToube
 const downloadYT = (req) => {
   var Downloader = require("./downloaderYT");
@@ -74,6 +81,7 @@ app.get('/', (req, res) => {
   let num = Math.random();
   let trackIndex = Math.round((num * playlist.length) - 1)
   console.log(playlist[trackIndex])
+
   res.send("num");
 });
 // Add Track
@@ -81,19 +89,18 @@ app.post('/addtrack', (req, res) => {
   let trackUrl = req.body.trackUrl.toLowerCase()
   console.log("request posted to /addtrack")
   console.log(trackUrl)
+  let platform = ""
 
-    // Handle YouTube
+  // Handle YouTube
   if (req.body.trackUrl.toLowerCase().includes("youtube") === true) {
     downloadYT(req)
-    const platform = "YouTube"
-  res.send("received " + platform + " Track: " + req.body.trackUrl);
-
-  // Handle SoundCloud
+    platform = "YouTube"
+    // Handle SoundCloud
   } else if (req.body.trackUrl.toLowerCase().includes("soundcloud") === true) {
     downloadSC(req)
-    const platform = "SoundCloud"
-  res.send("received " + platform + " Track: " + req.body.trackUrl);
+    platform = "SoundCloud"
   }
+  res.send("received " + platform + " Track: " + req.body.trackUrl);
 });
 app.listen(port, () => {
   console.log(`Success! Your application is running on port ${port}.`);
