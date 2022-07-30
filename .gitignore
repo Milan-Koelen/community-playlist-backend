@@ -1,3 +1,4 @@
 node_modules
 data/mp3
 .env
+data/.DS_Store

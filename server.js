@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require("fs")
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -17,9 +18,16 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const playlist = ["track 1", "track 2", "track 3", "track 4", "track 5", "track 6", "track 7", "track 8", "track 9", "track 10",
-  "track 11", "track 12", "track 13", "track 14", "track 15", "track 16", "track 17", "track 18", "track 19", "track 20"]
-
+dir = "./data/mp3"
+playlist = []
+fs.readdir(dir,
+  (err, files) => {
+    if (err) {
+      throw err;
+    }
+    playlist = files
+  }
+)
 // Handle YouToube
 const downloadYT = (req) => {
   var Downloader = require("./downloaderYT");
@@ -43,13 +51,8 @@ const downloadYT = (req) => {
     }
   });
 
-  // const Downloader = require("./downloaderYT");
-  // const dl = new Downloader();
-  // const i = 0;
-
   let id = req.body.trackUrl.replace("https://www.youtube.com/watch?v=", "")
   console.log("Video ID: " + id)
-
 
   dl.getMP3({ videoId: id, name: id }, function (err, res) {
     i++;
@@ -65,7 +68,6 @@ const downloadYT = (req) => {
 const downloadSC = (req) => {
   const scdl = require("soundcloud-downloader").default;
   const fs = require('fs');
-  // const url = "https://soundcloud.com/user-115084905/zella-day-east-of-eden-crome-remix?in=lukasm1/sets/chill-mix-high-on-chill"
   scdl.download(req.body.trackUrl)
     .then(stream => stream.pipe(fs.createWriteStream('data/mp3/' + Math.random() + ".mp3").on("open", function () {
       console.log("Downloading")
@@ -75,34 +77,39 @@ const downloadSC = (req) => {
       }))
     .catch(err => console.log(err))
 }
-
 // Root
 app.get('/', (req, res) => {
-  let num = Math.random();
-  let trackIndex = Math.round((num * playlist.length) - 1)
-  console.log(playlist[trackIndex])
-  res.send("num");
+  let trackIndex = Math.floor(Math.random() * playlist.length)
+  if (trackIndex > (playlist.length - 1)) {
+    // console.log(trackIndex)
+    trackIndex = playlist.length - 1
+    // console.log(trackIndex)
+  }
+  // console.log(trackIndex)
+  track = playlist[trackIndex]
+  // console.log(track)
+  const rstream = fs.createReadStream(dir + "/" + track);
+  rstream.pipe(res);
+
 });
 // Add Track
 app.post('/addtrack', (req, res) => {
   let trackUrl = req.body.trackUrl.toLowerCase()
   console.log("request posted to /addtrack")
   console.log(trackUrl)
+  let platform = ""
 
-    // Handle YouTube
+  // Handle YouTube
   if (req.body.trackUrl.toLowerCase().includes("youtube") === true) {
     downloadYT(req)
-    const platform = "YouTube"
-  res.send("received " + platform + " Track: " + req.body.trackUrl);
-
-  // Handle SoundCloud
+    platform = "YouTube"
+    // Handle SoundCloud
   } else if (req.body.trackUrl.toLowerCase().includes("soundcloud") === true) {
     downloadSC(req)
-    const platform = "SoundCloud"
-  res.send("received " + platform + " Track: " + req.body.trackUrl);
+    platform = "SoundCloud"
   }
+  res.send("received " + platform + " Track: " + req.body.trackUrl);
 });
-
 app.listen(port, () => {
   console.log(`Success! Your application is running on port ${port}.`);
 })
