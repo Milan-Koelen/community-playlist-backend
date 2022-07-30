@@ -25,7 +25,6 @@ fs.readdir(dir,
     if (err) {
       throw err;
     }
-    console.log(files)
     playlist = files
   }
 )
@@ -82,18 +81,16 @@ const downloadSC = (req) => {
 app.get('/', (req, res) => {
   let trackIndex = Math.floor(Math.random() * playlist.length)
   if (trackIndex > (playlist.length - 1)) {
-    console.log(trackIndex)
+    // console.log(trackIndex)
     trackIndex = playlist.length - 1
-    console.log(trackIndex)
+    // console.log(trackIndex)
   }
-  console.log(trackIndex)
+  // console.log(trackIndex)
   track = playlist[trackIndex]
-  console.log(track)
-  let file = dir + "/" + track
+  // console.log(track)
   const rstream = fs.createReadStream(dir + "/" + track);
   rstream.pipe(res);
 
-  // res.send(track);
 });
 // Add Track
 app.post('/addtrack', (req, res) => {
