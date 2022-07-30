@@ -82,7 +82,13 @@ const downloadSC = (req) => {
 app.get('/', (req, res) => {
 
   let num = Math.random();
-  let trackIndex = Math.round((num * (playlist.length - 1)))
+  let trackIndex = Math.round((num * (playlist.length)))
+  if (trackIndex > (playlist.length - 1)) {
+    trackIndex - 1
+    console.log(trackIndex)
+  }
+  console.log(num)
+  console.log(trackIndex)
   track = playlist[trackIndex]
   console.log(track)
   let file = dir + "/" + track
