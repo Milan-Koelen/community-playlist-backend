@@ -80,14 +80,12 @@ const downloadSC = (req) => {
 }
 // Root
 app.get('/', (req, res) => {
-
-  let num = Math.random();
-  let trackIndex = Math.round((num * (playlist.length)))
+  let trackIndex = Math.floor(Math.random() * playlist.length)
   if (trackIndex > (playlist.length - 1)) {
-    trackIndex - 1
+    console.log(trackIndex)
+    trackIndex = playlist.length - 1
     console.log(trackIndex)
   }
-  console.log(num)
   console.log(trackIndex)
   track = playlist[trackIndex]
   console.log(track)
