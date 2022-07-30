@@ -19,12 +19,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 dir = "./data/mp3"
-const playlist = fs.readdir(dir,
+playlist = []
+fs.readdir(dir,
   (err, files) => {
     if (err) {
       throw err;
     }
     console.log(files)
+    playlist = files
   }
 )
 // Handle YouToube
@@ -78,6 +80,7 @@ const downloadSC = (req) => {
 }
 // Root
 app.get('/', (req, res) => {
+
   let num = Math.random();
   let trackIndex = Math.round((num * playlist.length) - 1)
   console.log(playlist[trackIndex])
