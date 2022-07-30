@@ -34,8 +34,6 @@ const downloadYT = (req) => {
   var dl = new Downloader();
   var i = 0;
 
-  // Hardcoded video ID, still nog working correctly
-
   // dl.download(req.body.videoId, "./public/music/", function (err, filename) {
   //   if (err)
   //     throw err;
